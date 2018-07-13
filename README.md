@@ -60,14 +60,14 @@ autotrack.fileTracker({
 （インスタンスの生成は1度でOK）
 
 - 対象となるバナーは`bannerSelector`オプションで指定します。（設定値は`document.querySelectorAll()`に渡されます。）
-- カテゴリ名（バナーの位置等を示す名前）を`eventCategory`オプションで指定します。
 - Google Analyticsに表示されるイベントアクション名を`eventAction`オプションで変更できます。（デフォルトは`Click`。）
+- カテゴリ名（バナーの位置等を示す名前）を`eventCategory`オプションで指定します。
 
 ```
 const autotrack = new Autotrack(GA_TRACKING_ID);
 autotrack.bannerTracker({
   bannerSelector: '.list-banner-01 a',
-  eventType: 'クリック',
+  eventAction: 'クリック',
   eventCategory: 'Banners 1'
 });
 ```
