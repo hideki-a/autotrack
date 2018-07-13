@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autotrack Test</title>
+  <link rel="stylesheet" href="jasmine/jasmine.css">
+  <script src="jasmine/jasmine.js"></script>
+  <script src="jasmine/jasmine-html.js"></script>
+  <script src="jasmine/boot.js"></script>
+  <script src="/js/autotrack.js"></script>
+  <script>
+    const GA_TRACKING_ID = 'test';
+    let data = {};
+    const gtag = function (type, value, object) {
+      data = {
+        type: type,
+        value: value,
+        object: object
+      };
+    };
+  </script>
+  <script src="test.js"></script>
+  <style>
+    #test_html {
+      visibility: hidden;
+      height: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="test_html">
+    <h1>Autotrack.js</h1>
+    <h2>FileTracker</h2>
+    <h3>Default getFileTitle function</h3>
+    <ul class="list-files-01">
+      <li><a href="/test.pdf">Test PDF</a></li>
+      <li><a href="/test.xlsx">Test Excel</a></li>
+      <li><a href="/test.zip">Test Zip</a></li>
+    </ul>
+    <h3>Set getFileTitle function</h3>
+    <ul class="list-files-02">
+      <li><a href="/test.pdf" data-title="時刻表（PDF版）">Test PDF</a></li>
+      <li><a href="/test.xlsx" data-title="時刻表（Excel版）">Test Excel</a></li>
+      <li><a href="/test.zip" data-title="時刻表（Zipアーカイブ版）">Test Zip</a></li>
+    </ul>
+
+    <h2>BannerTracker</h2>
+    <h3>Banners 1</h3>
+    <ul class="list-banner-01">
+      <li><a href="#"><img src="/images/bnr_01.png" srcset="/images/bnr_01.png 234w, /images/bnr_01_468w.png 468w" sizes="234px" alt="バナー1"></a></li>
+      <li><a href="#"><img src="/images/bnr_02.png" srcset="/images/bnr_02.png 234w, /images/bnr_02_468w.png 468w" sizes="234px" alt="バナー2"></a></li>
+    </ul>
+    <h3>Banners 2</h3>
+    <ul class="list-banner-02">
+      <li><a href="#"><img src="/images/bnr_03.png" srcset="/images/bnr_03.png 234w, /images/bnr_03_468w.png 468w" sizes="234px" alt="バナー3" data-label="Webアクセシビリティ"></a></li>
+      <li><a href="#"><img src="/images/bnr_04.png" srcset="/images/bnr_04.png 234w, /images/bnr_04_468w.png 468w" sizes="234px" alt="バナー4" data-label="レスポンシブWebデザイン"></a></li>
+    </ul>
+  </div><!-- #test_html -->
+</body>
+</html>

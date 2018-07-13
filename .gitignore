@@ -1,0 +1,6 @@
+node_modules/
+backup/
+documents/
+materials/
+.tmp/
+npm-debug.log
