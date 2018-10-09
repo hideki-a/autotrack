@@ -23,7 +23,16 @@ function () {
       fileTracker: {
         fileSelector: 'a[href$=".pdf"], a[href$=".zip"]',
         getFileTitle: function getFileTitle(link) {
-          return link.textContent;
+          var title = link.textContent;
+
+          if (!title) {
+            var images = link.getElementsByTagName('img');
+            [].forEach.call(images, function (elem) {
+              title += ' ' + elem.getAttribute('alt');
+            });
+          }
+
+          return title.trim();
         }
       },
       bannerTracker: {

@@ -6,7 +6,14 @@ class Autotrack { // eslint-disable-line no-unused-vars
       fileTracker: {
         fileSelector: 'a[href$=".pdf"], a[href$=".zip"]',
         getFileTitle: (link) => {
-          return link.textContent;
+          let title = link.textContent;
+          if (!title) {
+            const images = link.getElementsByTagName('img');
+            [].forEach.call(images, elem => {
+              title += ' ' + elem.getAttribute('alt');
+            });
+          }
+          return title.trim();
         },
       },
       bannerTracker: {

@@ -33,6 +33,13 @@
       expect(data.object.page_path).toBe('/test.pdf');
     });
 
+    it('Testing .list-files-01(link with image)', function () {
+      const elem = document.querySelectorAll('.list-files-01 a');
+      elem[3].click();
+      expect(data.object.page_title).toBe('Pamphlet');
+      expect(data.object.page_path).toBe('/test.pdf');
+    });
+
     it('Testing .list-files-02', function () {
       const elem = document.querySelectorAll('.list-files-02 a');
       elem[1].click();
