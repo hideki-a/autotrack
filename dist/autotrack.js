@@ -40,6 +40,9 @@ function () {
         getImageLabel: function getImageLabel(img) {
           return img.getAttribute('alt');
         }
+      },
+      youtubeTracker: {
+        playerSelector: 'iframe[src*="youtube.com/embed"]'
       }
     };
     this.options = _extends(this.defaultOptions, options); // https://stackoverflow.com/questions/5660131/how-to-removeeventlistener-that-is-addeventlistener-with-anonymous-function#answer-5660165
@@ -207,12 +210,83 @@ function () {
       });
     }
   }, {
-    key: "removeAllTracker",
-    value: function removeAllTracker() {
+    key: "youTubeTracker",
+    value: function youTubeTracker() {
       var _this3 = this;
 
+      var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+      var trackerOptions = _extends(this.defaultOptions.youtubeTracker, options);
+
+      var players = document.querySelectorAll(trackerOptions.playerSelector);
+      var eventAction = trackerOptions.eventAction;
+      var eventCategory = trackerOptions.eventCategory;
+      var videoIds = [];
+      var playedVideoIds = [];
+
+      if (!trackerOptions.apiScriptSrc) {
+        console.error('YoutubeTracker option "apiScriptSrc" is required.'); // eslint-disable-line no-console
+      }
+
+      if (players.length > 0) {
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        var youtubeApiScript = document.createElement('script');
+        youtubeApiScript.src = trackerOptions.apiScriptSrc;
+        firstScriptTag.parentNode.insertBefore(youtubeApiScript, firstScriptTag);
+      }
+
+      [].forEach.call(players, function (player) {
+        var videoId = player.getAttribute('src').replace(/.*embed\/(.*)\?.*/, '$1');
+        player.setAttribute('id', videoId);
+        videoIds.push(videoId);
+      });
+
+      var onPlayerStateChange = function onPlayerStateChange(event) {
+        if (event.data === 1) {
+          var videoData = event.target.getVideoData();
+
+          if (playedVideoIds.indexOf(videoData.video_id) === -1) {
+            if (_this3.options.debug) {
+              console.log('eventAction:', eventAction); // eslint-disable-line no-console
+
+              console.log('eventCategory:', eventCategory); // eslint-disable-line no-console
+
+              console.log('eventLabel:', videoData.title); // eslint-disable-line no-console
+
+              window.youTubeIframeMovieIsPlaying = true;
+            }
+
+            _this3._sendEvent(eventAction, eventCategory, videoData.title);
+
+            playedVideoIds.push(videoData.video_id);
+          }
+        }
+      };
+
+      window.onYouTubeIframeAPIReady = function () {
+        var players = [];
+        videoIds.forEach(function (id) {
+          var player = new YT.Player(id, {
+            events: {
+              'onStateChange': onPlayerStateChange
+            }
+          });
+          players.push(player);
+        });
+
+        if (_this3.options.debug) {
+          window.youTubeIframeAPIIsReady = true;
+          window.youTubePlayerForTest = players[0];
+        }
+      };
+    }
+  }, {
+    key: "removeAllTracker",
+    value: function removeAllTracker() {
+      var _this4 = this;
+
       this.listenerIds.forEach(function (id) {
-        _this3.eventHandler.removeListener(id);
+        _this4.eventHandler.removeListener(id);
       });
     }
   }]);

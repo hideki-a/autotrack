@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autotrack</title>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-47071488-2"></script>
+  <script>
+    const GA_TRACKING_ID = 'UA-47071488-2';  // This Tracking ID is for hideki's development site.
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', GA_TRACKING_ID);
+  </script>
+</head>
+<body>
+  <h1>Autotrack.js</h1>
+  <h2>YouTubeTracker</h2>
+  <div class="embed-responsive-object">
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/k2i4_t_pstE?enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+  </div><!-- .embed-responsive-object -->
+  <div class="embed-responsive-object">
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/RxJ03DGWw08?enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+  </div><!-- .embed-responsive-object -->
+
+  <script src="/js/autotrack.js"></script>
+  <script>
+    const options = {
+      debug: true,
+    };
+    const autotrack = new Autotrack(GA_TRACKING_ID, options);
+    autotrack.youTubeTracker({
+      apiScriptSrc: '/js/youtube_iframe_api.js',
+      eventCategory: '動画',
+      eventAction: '再生',
+    });
+  </script>
+</body>
+</html>

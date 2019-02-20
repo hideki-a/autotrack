@@ -22,6 +22,9 @@ class Autotrack { // eslint-disable-line no-unused-vars
           return img.getAttribute('alt');
         },
       },
+      youtubeTracker: {
+        playerSelector: 'iframe[src*="youtube.com/embed"]',
+      },
     };
 
     this.options = Object.assign(this.defaultOptions, options);
@@ -156,6 +159,68 @@ class Autotrack { // eslint-disable-line no-unused-vars
 
       this.listenerIds.push(handlerId);
     });
+  }
+
+  youTubeTracker(options = {}) {
+    const trackerOptions = Object.assign(this.defaultOptions.youtubeTracker, options);
+    const players = document.querySelectorAll(trackerOptions.playerSelector);
+    const eventAction = trackerOptions.eventAction;
+    const eventCategory = trackerOptions.eventCategory;
+    let videoIds = [];
+    let playedVideoIds = [];
+
+    if (!trackerOptions.apiScriptSrc) {
+      console.error('YoutubeTracker option "apiScriptSrc" is required.');  // eslint-disable-line no-console
+    }
+
+    if (players.length > 0) {
+      const firstScriptTag = document.getElementsByTagName('script')[0];
+      const youtubeApiScript = document.createElement('script');
+      youtubeApiScript.src = trackerOptions.apiScriptSrc;
+      firstScriptTag.parentNode.insertBefore(youtubeApiScript, firstScriptTag);
+    }
+
+    [].forEach.call(players, player => {
+      const videoId = player.getAttribute('src').replace(/.*embed\/(.*)\?.*/, '$1');
+      player.setAttribute('id', videoId);
+      videoIds.push(videoId);
+    });
+
+    const onPlayerStateChange = event => {
+      if (event.data === 1) {
+        const videoData = event.target.getVideoData();
+
+        if (playedVideoIds.indexOf(videoData.video_id) === -1) {
+          if (this.options.debug) {
+            console.log('eventAction:', eventAction);  // eslint-disable-line no-console
+            console.log('eventCategory:', eventCategory);  // eslint-disable-line no-console
+            console.log('eventLabel:', videoData.title);  // eslint-disable-line no-console
+            window.youTubeIframeMovieIsPlaying = true;
+          }
+
+          this._sendEvent(eventAction, eventCategory, videoData.title);
+          playedVideoIds.push(videoData.video_id);
+        }
+      }
+    };
+
+    window.onYouTubeIframeAPIReady = () => {
+      const players = [];
+
+      videoIds.forEach(id => {
+        const player = new YT.Player(id, {
+          events: {
+            'onStateChange': onPlayerStateChange
+          }
+        });
+        players.push(player);
+      });
+
+      if (this.options.debug) {
+        window.youTubeIframeAPIIsReady = true;
+        window.youTubePlayerForTest = players[0];
+      }
+    };
   }
 
   removeAllTracker() {
