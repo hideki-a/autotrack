@@ -224,14 +224,10 @@ function () {
       var videoIds = [];
       var playedVideoIds = [];
 
-      if (!trackerOptions.apiScriptSrc) {
-        console.error('YoutubeTracker option "apiScriptSrc" is required.'); // eslint-disable-line no-console
-      }
-
       if (players.length > 0) {
         var firstScriptTag = document.getElementsByTagName('script')[0];
         var youtubeApiScript = document.createElement('script');
-        youtubeApiScript.src = trackerOptions.apiScriptSrc;
+        youtubeApiScript.src = 'https://www.youtube.com/iframe_api';
         firstScriptTag.parentNode.insertBefore(youtubeApiScript, firstScriptTag);
       }
 
@@ -264,19 +260,16 @@ function () {
       };
 
       window.onYouTubeIframeAPIReady = function () {
-        var players = [];
         videoIds.forEach(function (id) {
-          var player = new YT.Player(id, {
+          new YT.Player(id, {
             events: {
               'onStateChange': onPlayerStateChange
             }
           });
-          players.push(player);
         });
 
         if (_this3.options.debug) {
           window.youTubeIframeAPIIsReady = true;
-          window.youTubePlayerForTest = players[0];
         }
       };
     }

@@ -169,14 +169,10 @@ class Autotrack { // eslint-disable-line no-unused-vars
     let videoIds = [];
     let playedVideoIds = [];
 
-    if (!trackerOptions.apiScriptSrc) {
-      console.error('YoutubeTracker option "apiScriptSrc" is required.');  // eslint-disable-line no-console
-    }
-
     if (players.length > 0) {
       const firstScriptTag = document.getElementsByTagName('script')[0];
       const youtubeApiScript = document.createElement('script');
-      youtubeApiScript.src = trackerOptions.apiScriptSrc;
+      youtubeApiScript.src = 'https://www.youtube.com/iframe_api';
       firstScriptTag.parentNode.insertBefore(youtubeApiScript, firstScriptTag);
     }
 
@@ -205,20 +201,16 @@ class Autotrack { // eslint-disable-line no-unused-vars
     };
 
     window.onYouTubeIframeAPIReady = () => {
-      const players = [];
-
       videoIds.forEach(id => {
-        const player = new YT.Player(id, {
+        new YT.Player(id, {
           events: {
             'onStateChange': onPlayerStateChange
           }
         });
-        players.push(player);
       });
 
       if (this.options.debug) {
         window.youTubeIframeAPIIsReady = true;
-        window.youTubePlayerForTest = players[0];
       }
     };
   }

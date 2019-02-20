@@ -91,45 +91,43 @@
     });
   });
 
-  // describe('Testing YouTubeTracker', function () {
-  //   let autotrack = null;
-  //   let intervalId = null;
+  describe('Testing YouTubeTracker', function () {
+    let autotrack = null;
+    let intervalId = null;
 
-  //   beforeEach(function (done) {
-  //     const options = {
-  //       debug: true,
-  //     };
-  //     autotrack = new Autotrack(GA_TRACKING_ID, options);
-  //     autotrack.youTubeTracker({
-  //       apiScriptSrc: '/js/youtube_iframe_api.js',
-  //       eventCategory: '動画',
-  //       eventAction: '再生',
-  //     });
+    beforeEach(function (done) {
+      const options = {
+        debug: true,
+      };
+      autotrack = new Autotrack(GA_TRACKING_ID, options);
+      autotrack.youTubeTracker({
+        eventCategory: '動画',
+        eventAction: '再生',
+      });
 
-  //     let intervalId = window.setInterval(function () {
-  //       if (window.youTubeIframeAPIIsReady) {
-  //         window.clearInterval(intervalId);
-  //         done();
-  //       }
-  //     }, 1000);
-  //   });
+      let intervalId = window.setInterval(function () {
+        if (window.youTubeIframeAPIIsReady) {
+          window.clearInterval(intervalId);
+          done();
+        }
+      }, 1000);
+    });
 
-  //   afterEach(function () {
-  //     autotrack.removeAllTracker();
-  //     window.clearInterval(intervalId);
-  //   });
+    afterEach(function () {
+      autotrack.removeAllTracker();
+      window.clearInterval(intervalId);
+    });
 
-  //   it('Testing movie play', function (done) {
-  //     window.youTubePlayerForTest.playVideo();
-  //     intervalId = window.setInterval(function () {
-  //       if (window.youTubeIframeMovieIsPlaying) {
-  //         window.clearInterval(intervalId);
-  //         expect(data.value).toBe('再生');
-  //         expect(data.object.event_category).toBe('動画');
-  //         expect(data.object.event_label).toBe('大名行列2017');
-  //         done();
-  //       }
-  //     }, 1000);
-  //   });
-  // });
+    it('Testing movie play', function (done) {
+      intervalId = window.setInterval(function () {
+        if (window.youTubeIframeMovieIsPlaying) {
+          window.clearInterval(intervalId);
+          expect(data.value).toBe('再生');
+          expect(data.object.event_category).toBe('動画');
+          expect(data.object.event_label).toBe('大名行列2017');
+          done();
+        }
+      }, 1000);
+    });
+  });
 }());
