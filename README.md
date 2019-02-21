@@ -1,6 +1,10 @@
 # Autotrack
 
-Google AnalyticsでPDFファイル等の閲覧数やバナーのクリック数を計測する機能を提供します。
+Google AnalyticsでHTMLファイルのページビュー以外の計測を容易に実現する機能を提供します。
+
+- PDFファイル等の閲覧数
+- バナーのクリック数
+- YouTube動画の再生数
 
 ## 使い方
 
@@ -14,7 +18,7 @@ gtag.jsを`head`要素に挿入します。その際、トラッキングIDを�
 
 ```
 <!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-47071488-2"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-12345678-9"></script>
 <script>
   const GA_TRACKING_ID = 'UA-12345678-9';
   window.dataLayer = window.dataLayer || [];
@@ -81,6 +85,21 @@ autotrack.bannerTracker({
   getImageLabel: function (img) {
     return img.dataset.label;
   }
+});
+```
+
+### YouTube動画の再生数計測
+
+下記コードでAutotrackインスタンスを生成し、`youTubeTracker()`メソッドで計測を開始します。
+（インスタンスの生成は1度でOK）
+
+- YouTube動画をiframeで埋め込む際、URLに`?enablejsapi=1`を付与します。
+
+```
+const autotrack = new Autotrack(GA_TRACKING_ID);
+autotrack.youTubeTracker({
+  eventCategory: '動画',
+  eventAction: '再生',
 });
 ```
 
